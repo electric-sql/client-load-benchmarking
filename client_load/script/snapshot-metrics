@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set -e
+
+__dir__="$(dirname "$0")"
+
+usage() {
+  echo "usage: clients=CLIENTS [size=SIZE] [tps=TPS] ${0}"
+}
+
+if [[ -z "${clients}" ]] || [[ -z "${size}" ]] || [[ -z "${tps}" ]]; then
+  usage
+  exit 1
+fi
+
+dir="${__dir__}/statistics/tps$(printf '%03d' "${tps}")"
+mkdir -p "${dir}"
+
+filename="statistics-${clients}-${size}b-$(printf '%03d' "${tps}")tps-$(date +'%Y%m%d-%H%M%S').sql"
+
+path="${dir}/${filename}"
+
+echo "-- statistics for:" >"${path}"
+echo "--" >>"${path}"
+echo "--   clients: ${clients}" >>"${path}"
+echo "--   data size: ${size} bytes" >>"${path}"
+echo "--   tps: ${tps} transactions per second (approx)" >>"${path}"
+echo "--" >>"${path}"
+echo "--" >>"${path}"
+echo "--" >>"${path}"
+
+pg_dump --no-publications --clean -d "${DATABASE_URL}" >>"${path}"
+
+echo "snapshot written to '${path}'"

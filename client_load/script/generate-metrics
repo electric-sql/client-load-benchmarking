@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -e
+
+__dir__="$(
+  cd "$(dirname "$0")"
+  pwd
+)"
+
+size="${size:-16}"
+tps="${tps:-1}"
+duration="${duration:-300}"
+
+echo "generating of for ${tps} tx/s, inserting ${size} bytes for ${duration} seconds"
+
+(
+  set -e
+  cd "${__dir__}/../../load_generator"
+  mix gen.load \
+    --table "items" \
+    -c "value:text:${size}" \
+    --tps "${tps}" \
+    --db "${DATABASE_URL}" \
+    --duration "${duration}"
+)

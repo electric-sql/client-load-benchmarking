@@ -1,0 +1,30 @@
+# fly.toml app configuration file generated for client-load on 2024-11-28T16:21:52Z
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'client-load'
+primary_region = 'lhr'
+
+[build]
+image = "electricsql/client-load:latest"
+
+[env]
+# The number of simultaneous clients to run in each fly machine. The higher the
+# number the more contention for resources within the machine itself and also
+# the higher the incoming bandwidth. 5000 is a reliable setting, but 10000 or
+# even 15000 work for lower tps settings.
+CLIENT_COUNT = "5000"
+# ELECTRIC_URL: the CDN endpoint fronting the electric instance. can be a single url or a comma-separated list of urls
+ELECTRIC_URL = "http://host1:8080,http://host2:8080"
+# approx. ms between client connections...
+CLIENT_WAIT = "10"
+# DATABASE_URL should connect to the database that the electric instance is
+# connected to as the client application writes statistics back to the source db
+DATABASE_URL = "postgresql://user:password@host:5432/database"
+
+
+[[vm]]
+memory = '16gb'
+cpu_kind = 'performance'
+cpus = 8
