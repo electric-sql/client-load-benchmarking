@@ -70,7 +70,7 @@ ARG VARNISH_BACKENDS
 ## Vaxine configuration via environment variables
 COPY --from=builder /app/_build/prod/rel/${RELEASE_NAME} ./
 COPY script/entrypoint /app/entrypoint-wrapped
-COPY script/rewrite-varnish-conf.sh /usr/local/bin/rewrite-varnish-conf.sh
+# COPY script/rewrite-varnish-conf.sh /usr/local/bin/rewrite-varnish-conf.sh
 # RUN mkdir -p /etc/varnish && /usr/local/bin/rewrite-varnish-conf.sh > /etc/varnish/default.vcl && rm -f /usr/local/bin/rewrite-varnish-conf.sh
 RUN mv /app/bin/${RELEASE_NAME} /app/bin/entrypoint
 

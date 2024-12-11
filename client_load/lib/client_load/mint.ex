@@ -4,7 +4,6 @@ defmodule ClientLoad.Mint do
 
   alias Electric.Client
   alias Electric.Client.Fetch
-  alias Electric.Client.Fetch.Mint.Connection
 
   @behaviour Electric.Client.Fetch.Pool
   @behaviour Electric.Client.Fetch
@@ -38,7 +37,7 @@ defmodule ClientLoad.Mint do
   @impl Electric.Client.Fetch
   def fetch(%Fetch.Request{} = request, opts) do
     with {:ok, conn} <- start_connection(request) do
-      Connection.fetch(conn, request, opts)
+      ClientLoad.Mint.Connection.fetch(conn, request, opts)
     end
   end
 
