@@ -170,7 +170,7 @@ defmodule ClientLoad.Mint.Connection do
             resp: %Fetch.Response{request_timestamp: now}
         }
 
-      {:error, conn, %Mint.HTTPError{reason: :closed}} ->
+      {:error, conn, %m{reason: :closed}} when m in [Mint.TransportError, Mint.HTTPError] ->
         Logger.info("[#{state.stream_id}] connection closed")
 
         %{state | conn: conn, tries: 0}
@@ -269,14 +269,13 @@ defmodule ClientLoad.Mint.Connection do
   defp maybe_close(%{conn: conn} = state) do
     if conn && Mint.HTTP.open?(conn) do
       Mint.HTTP.close(conn)
-      %{state | conn: nil}
-    else
-      state
     end
+
+    %{state | conn: nil}
   end
 
   defp sleep_before_reconnect(state) do
-    1..30
+    1..10
     |> Enum.random()
     |> retry_delay()
     |> tap(&Logger.info("Sleeping #{&1}ms before reconnecting"))

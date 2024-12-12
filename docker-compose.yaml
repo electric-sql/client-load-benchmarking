@@ -76,6 +76,11 @@ services:
       memlock:
         soft: -1
         hard: -1
+    sysctls:
+      "net.ipv4.tcp_tw_reuse": "1"
+      "net.ipv4.tcp_timestamps": "1"
+      "net.ipv4.tcp_rmem": "1024 4096 16384"
+      "net.ipv4.tcp_wmem": "1024 4096 16384"
 
   clients:
     build:
